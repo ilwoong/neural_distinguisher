@@ -17,7 +17,7 @@ def get_accuracy(net, x, y):
 ## ResNet 평가
 # 기존에 학습된 모델을 불러와 정확도를 평가한다.
 # @param resnet_depth Residual Layer의 깊이
-def evaluate_resnet(resnet_depth = 1, lower_round=5, upper_round=9):
+def evaluate_resnet(resnet_depth = 1, lower_round=5, upper_round=8):
     num_samples = 10**6
     for num_rounds in range(lower_round, upper_round):
         net = model.load_resnet(num_rounds, resnet_depth)
@@ -27,7 +27,7 @@ def evaluate_resnet(resnet_depth = 1, lower_round=5, upper_round=9):
 
 ## DNN 평가
 # 기존에 학습된 모델을 불러와 정확도를 평가한다.
-def evaluate_dnn(lower_round=5, upper_round=9):
+def evaluate_dnn(lower_round=5, upper_round=8):
     num_samples = 10**6
     for num_rounds in range(lower_round, upper_round):
         net = model.load_dnn(num_rounds)

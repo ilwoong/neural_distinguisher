@@ -18,12 +18,6 @@ def make_checkpoint(value):
     result = ModelCheckpoint(value, monitor='val_loss', save_best_only = True)
     return result
 
-def input_layer():
-    return 0
-
-def resnet():
-    return 0
-
 def prediction_head(in_layer, reg_param=0.0001):
     flat = keras.layers.Flatten()(in_layer)
     
@@ -93,7 +87,7 @@ def train_resnet(epochs, num_samples=10**7, num_rounds = 5, depth = 1, reg_param
 
     filename = "r" + str(num_rounds) + '_d' + str(depth)
 
-    check = make_checkpoint('best_' + filename + ".h5")
+    check = make_checkpoint('best_resnet_' + filename + ".h5")
 
     lr = LearningRateScheduler(cyclic_lr(9, 0.0001, 0.002))
 

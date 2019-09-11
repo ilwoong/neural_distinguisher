@@ -14,7 +14,7 @@ cipher = Speck()
 # @param num_samples 샘플 개수
 # @param diff 입력 차분
 # @return 평문, 평문 ^ diff 데이터 구조
-def generate_plaintext_structure(num_samples, diff=(0x0040, 0x0000)):
+def generate_plaintext_structure(num_samples, diff=(0x0000, 0x0040)):
     lhs0 = np.frombuffer(urandom(2 * num_samples), dtype=np.uint16)
     rhs0 = np.frombuffer(urandom(2 * num_samples), dtype=np.uint16)
 

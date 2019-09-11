@@ -13,8 +13,7 @@ def train_resnets(epochs=200, depth=1, lower_round=5, upper_round=8):
         model.train_resnet(epochs = epochs, num_rounds = round, depth = depth)
 
 ## 전체 모델 학습
-def train_all(epochs=1):
+def train_all(epochs=200):
     train_dnns(epochs=epochs)
     train_resnets(epochs=epochs, depth=1)
     train_resnets(epochs=epochs, depth=10)
-    

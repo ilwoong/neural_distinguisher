@@ -21,7 +21,7 @@ def convert_to_binary(arr):
 # @param diff 입력 차분
 # @return x 암호문 쌍
 # @return y 입력차분을 가지는 평문에서 생성된 암호문인지의 여부
-def make_train_data(num_samples, num_rounds, diff=(0x0040, 0)):
+def make_train_data(num_samples, num_rounds, diff=(0x0000, 0x0040)):
     y = np.frombuffer(urandom(num_samples), dtype=np.uint8) & 1
     keys = np.frombuffer(urandom(8 * num_samples), dtype=np.uint16).reshape(4,-1)
 
