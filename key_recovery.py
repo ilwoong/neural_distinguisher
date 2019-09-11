@@ -77,12 +77,13 @@ def attack(num_test=5, target_round=6):
         print("Recovery attack ended: ", datetime.datetime.now())
         print("Elapsed", elapsed)
 
+        real_key = rks[target_round-1]
+
         # 상위 3개 랭크 값을 가지는 추측 키 출력
         for j in range(4):
-            print("Guessed", hex(idx[j]), ", Rank", rank[idx[j]])
-
-        real_key = rks[target_round-1]
+            print("Guessed:", hex(idx[j]), " Diff:", hex(idx[j] ^ real_key), " Rank:", rank[idx[j]])
+        
         real_key_rank = rank_key(net, cl0, cr0, cl1, cr1, real_key)
         
-        print("Real key", hex(real_key), ", Rank", real_key_rank)
+        print("Real key:", hex(real_key), " Rank:", real_key_rank)
         print()
