@@ -76,18 +76,18 @@ def make_resnet(num_blocks = 2, word_size = 16, depth = 5, num_filters = 32, ker
 # @param num_epochs 학습에 사용할 epochs
 # @param num_rounds 목표 라운드
 # @param depth ResNet의 깊이
-def train_resnet(epochs, num_samples=10**7, num_rounds = 5, depth = 1, reg_param = 0.00001):
+def train_resnet(epochs, train, test, num_rounds = 5, depth = 1, reg_param = 0.00001, prefix="best_resnet_"):
     model = make_resnet(depth = depth, reg_param = reg_param)
     model.compile(optimizer='adam', loss='mse', metrics=['acc'])
 
     model.summary()
 
-    x_train, y_train = samples.make_train_data(num_samples, num_rounds)
-    x_test, y_test = samples.make_train_data(int(num_samples/10), num_rounds)
+    x_train, y_train = train[0], train[1]
+    x_test, y_test = test[0], test[1]
 
-    filename = "r" + str(num_rounds) + '_d' + str(depth)
+    filename = prefix + "_resnet_d" + str(depth) + '_r' + str(num_rounds)
 
-    check = make_checkpoint('best_resnet_' + filename + ".h5")
+    check = make_checkpoint(filename + ".h5")
 
     lr = LearningRateScheduler(cyclic_lr(9, 0.0001, 0.002))
 
@@ -152,9 +152,9 @@ def train_dnn(epochs = 10, num_rounds = 5, num_layers = 2):
 # @param round 라운드 수
 # @param depth Residual Layer의 깊이
 # @return 파라미터에 해당하는 ResNet 모델
-def load_resnet(round, depth):
+def load_resnet(round, depth, cipher="speck"):
     net = make_resnet(depth = depth)
-    path = 'trained_models/best_resnet_r' + str(round) + '_d' + str(depth) + '.h5'
+    path = 'trained_models/' + cipher + "_resnet_d" + str(depth) + '_r' + str(round) + ".h5"
     net.load_weights(path)
     return net
 

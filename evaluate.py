@@ -38,12 +38,4 @@ def evaluate_dnn(lower_round=5, upper_round=8):
 ## ResNet과 DNN 모델을 불러와 정확도를 출력한다.
 def evaluate_models():
     print("Result of depth 1 ResNet")
-    evaluate_resnet()
-
-    print("")
-    print("Result of depth 10 ResNet")
-    evaluate_resnet(10)
-
-    print("")
-    print("Result of DNN")
-    evaluate_dnn()
+    evaluate_resnet(resnet_depth = 1, lower_round=5, upper_round=6)

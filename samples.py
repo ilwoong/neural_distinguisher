@@ -6,11 +6,12 @@ from speck import Speck
 # @param arr 변환할 데이터
 # @param 이진값으로 변환된 데이터
 def convert_to_binary(arr):
-    x = np.zeros((4 * Speck.WORDSIZE, len(arr[0])), dtype=np.uint8)
+    wordsize = 16
+    x = np.zeros((4 * wordsize, len(arr[0])), dtype=np.uint8)
     
-    for i in range(4 * Speck.WORDSIZE):
-        idx = i // Speck.WORDSIZE
-        offset = Speck.WORDSIZE - (i % Speck.WORDSIZE) - 1
+    for i in range(4 * wordsize):
+        idx = i // wordsize
+        offset = wordsize - (i % wordsize) - 1
         x[i] = (arr[idx] >> offset) & 1
     
     return x.transpose()
@@ -21,7 +22,7 @@ def convert_to_binary(arr):
 # @param diff 입력 차분
 # @return x 암호문 쌍
 # @return y 입력차분을 가지는 평문에서 생성된 암호문인지의 여부
-def make_train_data(num_samples, num_rounds, diff=(0x0000, 0x0040)):
+def make_train_data(num_samples, num_rounds, diff=(0x0000, 0x0040), cipher=Speck()):
     y = np.frombuffer(urandom(num_samples), dtype=np.uint8) & 1
     keys = np.frombuffer(urandom(8 * num_samples), dtype=np.uint16).reshape(4,-1)
 
@@ -36,14 +37,17 @@ def make_train_data(num_samples, num_rounds, diff=(0x0000, 0x0040)):
     pt1l[y==0] = np.frombuffer(urandom(2 * num_random_samples), dtype=np.uint16)
     pt1r[y==0] = np.frombuffer(urandom(2 * num_random_samples), dtype=np.uint16)
 
-    sp = Speck()
-    
-    rks = sp.expand_key(keys, num_rounds)
+    rks = cipher.expand_key(keys, num_rounds)
 
-    ct0l, ct0r = sp.encrypt((pt0l, pt0r), rks)
-    ct1l, ct1r = sp.encrypt((pt1l, pt1r), rks)
+    ct0l, ct0r = cipher.encrypt((pt0l, pt0r), rks)
+    ct1l, ct1r = cipher.encrypt((pt1l, pt1r), rks)
 
     x = convert_to_binary([ct0l, ct0r, ct1l, ct1r])
     
     return x, y
 
+def generate_samples(num_samples, num_rounds, diff, cipher):
+    x_train, y_train = make_train_data(num_samples, num_rounds, diff, cipher)
+    x_test, y_test = make_train_data((int)(num_samples/10), num_rounds, diff, cipher)
+
+    return (x_train, y_train), (x_test, y_test)
